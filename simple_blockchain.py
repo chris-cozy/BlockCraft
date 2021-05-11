@@ -15,6 +15,7 @@ class Block:
     def __init__(self, data):
         self.data = data
 
+    #function to calculate the hash
     def hash(self):
         h = hashlib.sha256()
         h.update( 
@@ -29,15 +30,19 @@ class Block:
     def __str__(self):
         return "Block Hash: " + str(self.hash()) + "\nBlockNo: " + str(self.blockNum) + "\nBlock Data: " + str(self.data) + "\nHashes: " + str(self.nonce) + "\n--------------"
 
+#the class for the blackchain
 class Blockchain:
 
+    #difficulty setting for mining. Increasing this makes the window for acceptable hashes smaller, and increases the time it takes
     diff = 20
     maxNonce = 2**32
     target = 2 ** (256-diff)
 
+    #first block
     block = Block("Genesis")
     dummy = head = block
 
+    #function to add blocks to the blockchain
     def add(self, block):
 
         block.prev_hash = self.block.hash()
@@ -46,6 +51,7 @@ class Blockchain:
         self.block.next = block
         self.block = self.block.next
 
+    #function to mine blocks
     def mine(self, block):
         for n in range(self.maxNonce):
             if int(block.hash(), 16) <= self.target:
@@ -55,10 +61,11 @@ class Blockchain:
             else:
                 block.nonce += 1
 
-
+#creates the blockchain and mines the specified block number
 blockchain = Blockchain()
+numBlocks = 10
 
-for n in range(10):
+for n in range(numBlocks):
     blockchain.mine(Block("Block " + str(n + 1)))
 
 while blockchain.head != None:
