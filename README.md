@@ -9,7 +9,9 @@ More complexity may be added in the future.
 <hr>
 <b>Installation</b>
 <br>
-To run this project use the terminal command: python simple_blockchain.py
+To run this project use the terminal command:
+<br>
+<i>python simple_blockchain.py</i>
 <br>
 <br>
 <b>Note:</b> Depending on the difficult setting in the script, it may take a few moments for each block to be mined.
