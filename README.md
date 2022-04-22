@@ -10,7 +10,12 @@ To run this project use the terminal command:
 <br>
 <i>python simple_blockchain.py</i>
 <br>
-<br>
+<h2>Tech Stack</h2>
+<div id ="badges">
+  <img src="https://github.com/devicons/devicon/blob/master/icons/git/git-original.svg" title="Git" alt="Git" width="40" height="40">
+  <img src="https://github.com/devicons/devicon/blob/master/icons/python/python-original.svg" title="Python" alt="Python" width="40" height="40">
+  <img src="https://github.com/devicons/devicon/blob/master/icons/vscode/vscode-original.svg" title="VScode" alt="VScode" width="40" height="40">
+</div>
 <h2>Developer Notes</h2>
 Depending on the difficult setting in the script, it may take a few moments for each block to be mined.
 <br>
