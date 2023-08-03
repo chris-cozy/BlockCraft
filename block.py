@@ -4,7 +4,7 @@ import json
 
 
 class Block:
-    def __init__(self, data):
+    def __init__(self, data, timestamp=None):
         if data is None or not data.strip():
             raise ValueError("Block data cannot be empty.")
 
@@ -15,7 +15,10 @@ class Block:
         # nonce is a pseudo-random number that is utilized as a counter during the process of mining
         self.nonce = 0
         self.prev_hash = 0x0
-        self.timestamp = datetime.datetime.now()
+        if timestamp is not None:
+            self.timestamp = timestamp
+        else:
+            self.timestamp = datetime.datetime.now()
 
     # For calculating the attribute on call
     # You can call this method as an attribute
