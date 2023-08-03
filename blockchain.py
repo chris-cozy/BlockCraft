@@ -1,4 +1,5 @@
 from block import Block
+import json
 
 
 class Blockchain:
@@ -27,3 +28,17 @@ class Blockchain:
                 break
             else:
                 block.nonce += 1
+
+    def to_json(self):
+        blockchain_json = []
+        block = self.dummy
+        while block is not None:
+            blockchain_json.append(block.to_dict())
+            block = block.next
+        return json.dumps(blockchain_json, indent=2)
+
+    def from_json(self, blockchain_json):
+        blockchain_data = json.loads(blockchain_json)
+        for block_data in blockchain_data:
+            block = Block.from_dict(block_data)
+            self.add(block)
