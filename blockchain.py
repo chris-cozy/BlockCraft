@@ -55,13 +55,15 @@ class Blockchain:
 
     def to_json(self):
         """
-        Convert the blockchain data to JSON format.
+        Convert the blockchain data to JSON format, excluding genesis block.
 
         :return: The JSON representation of the blockchain data.
         """
         blockchain_json = []
         block = self.dummy
         while block is not None:
+            if block.data == "Genesis":
+                block = block.next
             blockchain_json.append(block.to_dict())
             block = block.next
         return json.dumps(blockchain_json, indent=2)
@@ -74,9 +76,8 @@ class Blockchain:
         """
         blockchain_data = json.loads(blockchain_json)
         for block_data in blockchain_data:
-            if block_data['data'] != "Genesis":
-                block = Block.from_dict(block_data)
-                self.add(block)
+            block = Block.from_dict(block_data)
+            self.add(block)
 
     def save_to_file(self, filename):
         """
