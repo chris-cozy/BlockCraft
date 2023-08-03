@@ -1,5 +1,6 @@
 import datetime
 import hashlib
+import json
 
 
 class Block:
@@ -42,3 +43,24 @@ class Block:
             "\nHashes: " + str(self.nonce) +
             "\n--------------"
         )
+
+    def to_dict(self):
+        return {
+            "blockNum": self.blockNum,
+            "data": self.data,
+            "hash": self.hash,
+            "nonce": self.nonce,
+            "prev_hash": self.prev_hash,
+            "timestamp": self.timestamp.isoformat(),
+        }
+
+    @classmethod
+    def from_dict(cls, data_dict):
+        block = cls(data_dict['data'])
+        block.blockNum = data_dict['blockNum']
+        block.hash = data_dict['hash']
+        block.nonce = data_dict['nonce']
+        block.prev_hash = data_dict['prev_hash']
+        block.timestamp = datetime.datetime.fromisoformat(
+            data_dict['timestamp'])
+        return block
