@@ -1,5 +1,7 @@
 from block import Block
 import json
+import hashlib
+import time
 
 
 class Blockchain:
@@ -22,12 +24,17 @@ class Blockchain:
 
     def mine(self, block):
         for n in range(self.maxNonce):
+            block.nonce = n
             if int(block.calculate_hash(), 16) <= self.target:
                 self.add(block)
                 print(block)
                 break
-            else:
-                block.nonce += 1
+
+    def time_taken_for_mining(self, block):
+        start_time = time.time()
+        self.mine(block)
+        end_time = time.time()
+        return end_time - start_time
 
     def to_json(self):
         blockchain_json = []

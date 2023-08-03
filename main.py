@@ -9,7 +9,9 @@ def main():
     for n in range(numBlocks):
         data = "Block " + str(n + 1)
         block = Block(data)
-        blockchain.mine(block)
+        elapsed_time = blockchain.time_taken_for_mining(block)
+
+        print(f"Block mined in {elapsed_time:.6f} seconds")
 
     while blockchain.head is not None:
         print(blockchain.head)
