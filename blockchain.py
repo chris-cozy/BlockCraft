@@ -23,6 +23,9 @@ class Blockchain:
 
         :param block: The block to be added.
         """
+        if block is None:
+            raise ValueError("Invalid block. Cannot add None block.")
+
         block.prev_hash = self.block.calculate_hash()
         block.blockNum = self.block.blockNum + 1
         self.block.next = block
@@ -34,12 +37,17 @@ class Blockchain:
 
         :param block: The block to be mined.
         """
+        if block is None:
+            raise ValueError("Invalid block. Cannot mine None block.")
+
         for n in range(self.maxNonce):
             block.nonce = n
             if int(block.calculate_hash(), 16) <= self.target:
                 self.add(block)
                 print(block)
                 break
+        else:
+            raise ValueError("Mining failed. Couldn't find a valid hash.")
 
     def time_taken_for_mining(self, block):
         """
@@ -74,10 +82,14 @@ class Blockchain:
 
         :param blockchain_json: The JSON representation of the blockchain data.
         """
-        blockchain_data = json.loads(blockchain_json)
-        for block_data in blockchain_data:
-            block = Block.from_dict(block_data)
-            self.add(block)
+        try:
+            blockchain_data = json.loads(blockchain_json)
+            for block_data in blockchain_data:
+                block = Block.from_dict(block_data)
+                self.add(block)
+        except (json.JSONDecodeError, KeyError) as e:
+            raise ValueError(
+                "Invalid JSON data. Cannot load blockchain.") from e
 
     def save_to_file(self, filename):
         """
