@@ -4,6 +4,9 @@ import hashlib
 
 class Block:
     def __init__(self, data):
+        if data is None or not data.strip():
+            raise ValueError("Block data cannot be empty.")
+
         self.blockNum = 0
         self.data = data
         self.next = None
