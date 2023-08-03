@@ -6,3 +6,4 @@
     - PoW mining System implemented
     - Peer-to-Peer node network simulated
     - Saving/Loading with external files implemented
+    - Added unit testing
