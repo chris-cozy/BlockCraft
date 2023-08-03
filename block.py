@@ -7,10 +7,18 @@ class Block:
         self.blockNum = 0
         self.data = data
         self.next = None
-        self.hash = None
+        self._hash = None
         self.nonce = 0
         self.prev_hash = 0x0
         self.timestamp = datetime.datetime.now()
+
+    # For calculating the attribute on call
+    # You can call this method as an attribute
+    @property
+    def hash(self):
+        if self._hash is None:
+            self._hash = self.calculate_hash()
+        return self._hash
 
     def calculate_hash(self):
         h = hashlib.sha256()
@@ -25,7 +33,7 @@ class Block:
 
     def __str__(self):
         return (
-            "Block Hash: " + str(self.calculate_hash()) +
+            "Block Hash: " + str(self.hash) +
             "\nBlockNo: " + str(self.blockNum) +
             "\nBlock Data: " + str(self.data) +
             "\nHashes: " + str(self.nonce) +
