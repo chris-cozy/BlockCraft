@@ -74,8 +74,9 @@ class Blockchain:
         """
         blockchain_data = json.loads(blockchain_json)
         for block_data in blockchain_data:
-            block = Block.from_dict(block_data)
-            self.add(block)
+            if block_data['data'] != "Genesis":
+                block = Block.from_dict(block_data)
+                self.add(block)
 
     def save_to_file(self, filename):
         """
