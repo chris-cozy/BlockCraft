@@ -62,7 +62,7 @@ class Block:
     def from_dict(cls, data_dict):
         block = cls(data_dict['data'])
         block.blockNum = data_dict['blockNum']
-        block.hash = data_dict['hash']
+        block._hash = data_dict['hash']
         block.nonce = data_dict['nonce']
         block.prev_hash = data_dict['prev_hash']
         block.timestamp = datetime.datetime.fromisoformat(
