@@ -62,3 +62,8 @@ class Blockchain:
         blockchain = cls()
         blockchain.from_json(blockchain_json)
         return blockchain
+
+    def print_blockchain(self):
+        while self.head is not None:
+            print(self.head)
+            self.head = self.head.next
