@@ -49,3 +49,16 @@ class Blockchain:
         for block_data in blockchain_data:
             block = Block.from_dict(block_data)
             self.add(block)
+
+    def save_to_file(self, filename):
+        blockchain_json = self.to_json()
+        with open(filename, 'w') as file:
+            file.write(blockchain_json)
+
+    @classmethod
+    def load_from_file(cls, filename):
+        with open(filename, 'r') as file:
+            blockchain_json = file.read()
+        blockchain = cls()
+        blockchain.from_json(blockchain_json)
+        return blockchain
