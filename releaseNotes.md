@@ -7,3 +7,5 @@
     - Peer-to-Peer node network simulated
     - Saving/Loading with external files implemented
     - Added unit testing
+    - Added integration testing
+    - Updated error handling
