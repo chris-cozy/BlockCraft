@@ -2,6 +2,7 @@ from block import Block
 import json
 import hashlib
 import time
+import ast
 
 
 class Blockchain:
@@ -40,6 +41,14 @@ class Blockchain:
         if block is None:
             raise ValueError("Invalid block. Cannot mine None block.")
 
+        if block.contract_script:
+            try:
+                # Execute the smart contract script
+                result = self.execute_contract(block.contract_script)
+                print("Smart contract executed. Result: ", result)
+            except Exception as e:
+                raise ValueError("Error executing smart contract.") from e
+
         for n in range(self.maxNonce):
             block.nonce = n
             if int(block.calculate_hash(), 16) <= self.target:
@@ -48,6 +57,20 @@ class Blockchain:
                 break
         else:
             raise ValueError("Mining failed. Couldn't find a valid hash.")
+
+    def execute_contract(self, contract_script):
+        """
+        Execute the smart contract script.
+
+        :param contract_script: The smart contract script to be executed.
+        :return: The result of the contract execution.
+        """
+        # We'll support basic arithmetic expressions
+        try:
+            result = eval(contract_script)
+            return result
+        except Exception as e:
+            raise ValueError("Error executing smart contract.") from e
 
     def time_taken_for_mining(self, block):
         """
