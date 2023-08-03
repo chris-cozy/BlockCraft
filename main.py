@@ -14,7 +14,8 @@ def main():
 
         for n in range(numBlocks):
             data = "Node 1 - Block " + str(n + 1)
-            block = Block(data)
+            test_contract_script = f"{n} * 4"
+            block = Block(data, test_contract_script)
             node1.mine(block)
 
         # Save the blockchain to a file
