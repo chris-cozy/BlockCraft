@@ -4,6 +4,9 @@ import time
 
 
 def main():
+    """
+    Entry point of the blockchain simulator.
+    """
     # Each node represents a computer
     node1 = Blockchain()
     numBlocks = 10

@@ -5,6 +5,12 @@ import json
 
 class Block:
     def __init__(self, data, timestamp=None):
+        """
+        Initialize a new Block instance.
+
+        :param data: The data to be stored in the block.
+        :param timestamp: (Optional) The timestamp of the block. If not provided, the current timestamp will be used.
+        """
         if data is None or not data.strip():
             raise ValueError("Block data cannot be empty.")
 
@@ -24,11 +30,21 @@ class Block:
     # You can call this method as an attribute
     @property
     def hash(self):
+        """
+        Calculate and return the hash of the block.
+
+        :return: The hash of the block.
+        """
         if self._hash is None:
             self._hash = self.calculate_hash()
         return self._hash
 
     def calculate_hash(self):
+        """
+        Calculate the hash of the block.
+
+        :return: The calculated hash of the block.
+        """
         h = hashlib.sha256()
         h.update(
             str(self.nonce).encode('utf-8') +
@@ -39,16 +55,12 @@ class Block:
         )
         return h.hexdigest()
 
-    def __str__(self):
-        return (
-            "Block Hash: " + str(self.hash) +
-            "\nBlockNo: " + str(self.blockNum) +
-            "\nBlock Data: " + str(self.data) +
-            "\nHashes: " + str(self.nonce) +
-            "\n--------------"
-        )
-
     def to_dict(self):
+        """
+        Convert the block data to a dictionary.
+
+        :return: A dictionary representation of the block data.
+        """
         return {
             "blockNum": self.blockNum,
             "data": self.data,
@@ -60,6 +72,12 @@ class Block:
 
     @classmethod
     def from_dict(cls, data_dict):
+        """
+        Create a new Block instance from a dictionary.
+
+        :param data_dict: The dictionary containing the block data.
+        :return: A new Block instance created from the dictionary.
+        """
         block = cls(data_dict['data'])
         block.blockNum = data_dict['blockNum']
         block._hash = data_dict['hash']
@@ -68,3 +86,17 @@ class Block:
         block.timestamp = datetime.datetime.fromisoformat(
             data_dict['timestamp'])
         return block
+
+    def __str__(self):
+        """
+        Return a string representation of the block.
+
+        :return: A string representation of the block.
+        """
+        return (
+            "Block Hash: " + str(self.hash) +
+            "\nBlockNo: " + str(self.blockNum) +
+            "\nBlock Data: " + str(self.data) +
+            "\nHashes: " + str(self.nonce) +
+            "\n--------------"
+        )
