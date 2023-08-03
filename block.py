@@ -12,6 +12,7 @@ class Block:
         self.data = data
         self.next = None
         self._hash = None
+        # nonce is a pseudo-random number that is utilized as a counter during the process of mining
         self.nonce = 0
         self.prev_hash = 0x0
         self.timestamp = datetime.datetime.now()
