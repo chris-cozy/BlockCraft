@@ -65,6 +65,7 @@ class Block:
         return {
             "blockNum": self.blockNum,
             "data": self.data,
+            "script": self.contract_script,
             "hash": self.hash,
             "nonce": self.nonce,
             "prev_hash": self.prev_hash,
@@ -95,9 +96,11 @@ class Block:
         :return: A string representation of the block.
         """
         return (
-            "Block Hash: " + str(self.hash) +
+            "\n--------------" +
+            "\nBlock Hash: " + str(self.hash) +
             "\nBlockNo: " + str(self.blockNum) +
             "\nBlock Data: " + str(self.data) +
+            "\nBlock Script: " + str(self.contract_script) +
             "\nHashes: " + str(self.nonce) +
             "\n--------------"
         )
