@@ -9,13 +9,13 @@ import time
 class IntegrationTest(unittest.TestCase):
     def test_blockchain_integration(self):
         # Define a test scenario
-        numBlocks = 5
+        num_blocks = 5
 
         # Create a new blockchain instance
         blockchain = Blockchain()
 
         # Mine blocks and add them to the blockchain
-        for n in range(numBlocks):
+        for n in range(num_blocks):
             data = "Test Block " + str(n + 1)
             block = Block(data)
             blockchain.mine(block)

@@ -5,6 +5,3 @@ class Node:
 
     def mine(self, block):
         self.blockchain.mine(block, self.node_id)
-
-    def set_blockchain(self, blockchain):
-        self.blockchain = blockchain

@@ -9,7 +9,7 @@ class TestBlock(unittest.TestCase):
         data = "Test Block"
         block = Block(data)
         self.assertEqual(block.data, data)
-        self.assertEqual(block.blockNum, 0)
+        self.assertEqual(block.block_num, 0)
         self.assertEqual(block.nonce, 0)
         self.assertEqual(block.prev_hash, 0x0)
 
@@ -33,7 +33,7 @@ class TestBlockchain(unittest.TestCase):
         # Test blockchain creation
         self.assertIsNotNone(self.blockchain)
         self.assertEqual(self.blockchain.difficulty, 20)
-        self.assertEqual(self.blockchain.maxNonce, 2**32)
+        self.assertEqual(self.blockchain.max_nonce, 2**32)
         self.assertEqual(self.blockchain.target, 2**(256 - 20))
         self.assertIsNotNone(self.blockchain.block)
         self.assertIsNotNone(self.blockchain.dummy)

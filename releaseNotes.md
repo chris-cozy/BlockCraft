@@ -3,6 +3,8 @@
 ## Version 1.1.0 - August 4, 2023
 
     - Overhauled Proof of Work mining system
+    - Cleaned and organized code
+    - Added LICENSE and requirements file
 
 ## Version 1.0.0 - August 3, 2023
 

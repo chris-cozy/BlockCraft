@@ -15,7 +15,7 @@ class Block:
         if data is None or not data.strip():
             raise ValueError("Block data cannot be empty.")
 
-        self.blockNum = 0
+        self.block_num = 0
         self.data = data
         self.contract_script = contract_script  # The smart contract script
         self.next = None
@@ -54,7 +54,7 @@ class Block:
             str(self.data).encode('utf-8') +
             str(self.prev_hash).encode('utf-8') +
             str(self.timestamp).encode('utf-8') +
-            str(self.blockNum).encode('utf-8')
+            str(self.block_num).encode('utf-8')
         )
         return h.hexdigest()
 
@@ -65,7 +65,7 @@ class Block:
         :return: A dictionary representation of the block data.
         """
         return {
-            "blockNum": self.blockNum,
+            "blockNum": self.block_num,
             "data": self.data,
             "script": self.contract_script,
             "hash": self.hash,
@@ -85,7 +85,7 @@ class Block:
         :return: A new Block instance created from the dictionary.
         """
         block = cls(data_dict['data'])
-        block.blockNum = data_dict['blockNum']
+        block.block_num = data_dict['blockNum']
         block._hash = data_dict['hash']
         block.nonce = data_dict['nonce']
         block.prev_hash = data_dict['prev_hash']
@@ -104,7 +104,7 @@ class Block:
         return (
             "\n--------------" +
             "\nBlock Hash: " + str(self.hash) +
-            "\nBlockNo: " + str(self.blockNum) +
+            "\nBlockNo: " + str(self.block_num) +
             "\nNode Miner: " + str(self.miner) +
             "\nTime Mining: " + str(self.time_to_mine) +
             "\nBlock Data: " + str(self.data) +
