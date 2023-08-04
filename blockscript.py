@@ -8,7 +8,8 @@ blockscript_grammar = """
     ?stmt: var_declaration
         | if_statement
         | while_loop
-        | expr ";"
+        | assignment
+        | expr ";"?
 
     var_declaration: "let" NAME "=" expr
 
@@ -19,18 +20,37 @@ blockscript_grammar = """
     block: "{" stmt+ "}"
 
     // Expressions
-    ?expr: term
-        | expr "+" term -> add
-        | expr "-" term -> sub
+    ?expr: comp_expr
 
-    ?term: factor
-        | term "*" factor -> mul
-        | term "/" factor -> div
+    comp_expr: arith_expr
+        | comp_expr ">" arith_expr -> greater_than
+        | comp_expr "<" arith_expr -> less_than
+        | comp_expr ">=" arith_expr -> greater_than_or_equal
+        | comp_expr "<=" arith_expr -> less_than_or_equal
 
-    ?factor: NUMBER -> number
+    arith_expr: term
+        | arith_expr "+" term -> add
+        | arith_expr "-" term -> sub
+
+    term: mul_expr
+        | term "*" mul_expr -> mul
+        | term "/" mul_expr -> div
+
+    mul_expr: factor
+        | mul_expr "*" factor -> more_than
+        | mul_expr "/" factor -> less_than
+
+    factor: NUMBER -> number
           | NAME -> var
+          | STRING -> string
           | "-" factor -> neg
           | "(" expr ")"
+
+    assignment: NAME "=" expr
+
+    print_statement: "print" "(" expr ")"
+
+    STRING: /".*?"/
 
     %import common.CNAME -> NAME
     %import common.NUMBER
@@ -84,13 +104,16 @@ class BlockScriptTransformer(Transformer):
         return BinaryOpNode(items[0], TokenType.DIVIDE, items[1])
 
     def number(self, token):
-        return NumberNode(token)
+        return NumberNode(token[0])
 
     def var(self, token):
-        return VarNode(token.value)
+        return VarNode(token[0].value)
 
     def neg(self, item):
         return NegNode(item)
+
+    def print_statement(self, expression):
+        return PrintNode(expression)
 
 
 # Lexer and Parser instances
@@ -105,9 +128,12 @@ def parse_blockscript(code):
 class BlockScriptInterpreter:
     def __init__(self):
         self.variables = {}
-        self.result = None
+        self.printed_values = []
 
     def visit(self, node):
+        if isinstance(node, list):
+            for stmt in node:
+                self.visit(stmt)
         if isinstance(node, NumberNode):
             return node.value
         elif isinstance(node, BinaryOpNode):
@@ -134,11 +160,13 @@ class BlockScriptInterpreter:
             while self.visit(node.condition):
                 self.visit(node.loop_block)
         elif isinstance(node, PrintNode):
-            self.result = self.visit(node.expression)
+            value = self.visit(node.expression)
+            print(value)
+            self.printed_values.append(value)
 
     def execute(self, syntax_tree):
         self.visit(syntax_tree)
-        return self.result
+        return self.printed_values
 
 
 # Token types
@@ -199,24 +227,20 @@ class PrintNode:
         self.expression = expression
 
 
-# Lexer and Parser (not shown for brevity)
-# ...
-
-
 # BlockScript Code to Interpret
 blockscript_code = """
 let x = 10
 let y = 5
 
 if (x > y) {
-    print("x is greater than y")
+    print("x is greater than y");
 } else {
-    print("y is greater than or equal to x")
+    print("y is greater than or equal to x");
 }
 
 let i = 1
 while (i <= 5) {
-    print(i)
+    print(i);
     i = i + 1
 }
 """
