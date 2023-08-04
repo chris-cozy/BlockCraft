@@ -4,11 +4,12 @@ import json
 
 
 class Block:
-    def __init__(self, data, timestamp=None):
+    def __init__(self, data, contract_script=None, timestamp=None):
         """
         Initialize a new Block instance.
 
         :param data: The data to be stored in the block.
+        :param contract_script: (Optional) The smart contract script to be executed during block mining.
         :param timestamp: (Optional) The timestamp of the block. If not provided, the current timestamp will be used.
         """
         if data is None or not data.strip():
@@ -16,10 +17,10 @@ class Block:
 
         self.blockNum = 0
         self.data = data
+        self.contract_script = contract_script  # The smart contract script
         self.next = None
         self._hash = None
-        # nonce is a pseudo-random number that is utilized as a counter during the process of mining
-        self.nonce = 0
+        self.nonce = 0  # nonce is a pseudo-random number that is utilized as a counter during the process of mining
         self.prev_hash = 0x0
         if timestamp is not None:
             self.timestamp = timestamp
@@ -64,6 +65,7 @@ class Block:
         return {
             "blockNum": self.blockNum,
             "data": self.data,
+            "script": self.contract_script,
             "hash": self.hash,
             "nonce": self.nonce,
             "prev_hash": self.prev_hash,
@@ -94,9 +96,11 @@ class Block:
         :return: A string representation of the block.
         """
         return (
-            "Block Hash: " + str(self.hash) +
+            "\n--------------" +
+            "\nBlock Hash: " + str(self.hash) +
             "\nBlockNo: " + str(self.blockNum) +
             "\nBlock Data: " + str(self.data) +
+            "\nBlock Script: " + str(self.contract_script) +
             "\nHashes: " + str(self.nonce) +
             "\n--------------"
         )
