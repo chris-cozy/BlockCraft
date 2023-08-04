@@ -27,6 +27,7 @@ class Block:
         else:
             self.timestamp = datetime.datetime.now()
         self.miner = miner
+        self.time_to_mine = None
 
     # For calculating the attribute on call
     # You can call this method as an attribute
@@ -71,6 +72,8 @@ class Block:
             "nonce": self.nonce,
             "prev_hash": self.prev_hash,
             "timestamp": self.timestamp.isoformat(),
+            "miner": self.miner,
+            "time_to_mine": self.time_to_mine,
         }
 
     @classmethod
@@ -88,6 +91,8 @@ class Block:
         block.prev_hash = data_dict['prev_hash']
         block.timestamp = datetime.datetime.fromisoformat(
             data_dict['timestamp'])
+        block.miner = data_dict["miner"]
+        block.time_to_mine = data_dict["time_to_mine"]
         return block
 
     def __str__(self):
@@ -101,6 +106,7 @@ class Block:
             "\nBlock Hash: " + str(self.hash) +
             "\nBlockNo: " + str(self.blockNum) +
             "\nNode Miner: " + str(self.miner) +
+            "\nTime Mining: " + str(self.time_to_mine) +
             "\nBlock Data: " + str(self.data) +
             "\nBlock Script: " + str(self.contract_script) +
             "\nHashes: " + str(self.nonce) +
