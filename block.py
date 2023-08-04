@@ -4,7 +4,7 @@ import json
 
 
 class Block:
-    def __init__(self, data, contract_script=None, timestamp=None):
+    def __init__(self, data, contract_script=None, timestamp=None, miner=None):
         """
         Initialize a new Block instance.
 
@@ -26,6 +26,7 @@ class Block:
             self.timestamp = timestamp
         else:
             self.timestamp = datetime.datetime.now()
+        self.miner = miner
 
     # For calculating the attribute on call
     # You can call this method as an attribute
