@@ -11,7 +11,7 @@ class Blockchain:
         Initialize a new Blockchain instance.
         """
         self.difficulty = 20  # difficulty setting for mining. Increasing this makes the window for acceptable hashes smaller, and increases the time it takes to mine
-        self.maxNonce = 2**32
+        self.max_nonce = 2**32
         self.target = 2 ** (256 - self.difficulty)
         self.block = Block("Genesis")
         self.dummy = self.head = self.block
@@ -27,7 +27,7 @@ class Blockchain:
             raise ValueError("Invalid block. Cannot add None block.")
 
         block.prev_hash = self.block.calculate_hash()
-        block.blockNum = self.block.blockNum + 1
+        block.block_num = self.block.block_num + 1
         self.block.next = block
         self.block = self.block.next
 
@@ -52,7 +52,7 @@ class Blockchain:
                 raise ValueError("Error executing smart contract.") from e
 
         start_time = time.time()
-        for n in range(self.maxNonce):
+        for n in range(self.max_nonce):
             block.nonce = n
             if int(block.calculate_hash(), 16) <= self.target:
                 end_time = time.time()
