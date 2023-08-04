@@ -61,19 +61,6 @@ class Blockchain:
         else:
             raise ValueError("Mining failed. Couldn't find a valid hash.")
 
-    def vote_for_blockchain(self, blockchain):
-        """
-        Vote for the longest valid blockchain.
-
-        :param blockchain: The blockchain to vote for.
-        :return: True if the vote was successful, False otherwise.
-        """
-        # Check if the blockchain is longer than the current one and valid
-        if self.is_valid_blockchain(blockchain) and len(blockchain) > len(self.mined_blocks):
-            self.mined_blocks = blockchain
-            return True
-        return False
-
     def is_valid_blockchain(self, blockchain):
         """
         Check if a blockchain is valid.
@@ -97,12 +84,25 @@ class Blockchain:
 
         :param nodes: A list of nodes in the network.
         """
+        max_length = 0
+        max_length_blockchain = None
+
         for node in nodes:
-            vote_successful = node.vote_for_blockchain(self.mined_blocks)
-            if vote_successful:
-                print(f"Node {node.node_id} voted for the new blockchain.")
-            else:
-                print(f"Node {node.node_id} kept its own blockchain.")
+            potential_blockchain = node.get_mined_blocks()
+            if self.is_valid_blockchain(potential_blockchain) and len(potential_blockchain) > max_length:
+                max_length = len(potential_blockchain)
+                max_length_blockchain = potential_blockchain
+
+        if max_length_blockchain:
+            for node in nodes:
+                node.update_blockchain(max_length_blockchain)
+
+            self.mined_blocks.clear()
+
+            print("Consensus reached. Updated blockchain:")
+            self.print_blockchain()
+        else:
+            print("Consensus not reached. Current blockchain remains unchanged.")
 
     def execute_contract(self, contract_script):
         """
