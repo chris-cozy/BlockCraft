@@ -100,6 +100,7 @@ class Block:
             "\n--------------" +
             "\nBlock Hash: " + str(self.hash) +
             "\nBlockNo: " + str(self.blockNum) +
+            "\nNode Miner: " + str(self.miner) +
             "\nBlock Data: " + str(self.data) +
             "\nBlock Script: " + str(self.contract_script) +
             "\nHashes: " + str(self.nonce) +
