@@ -15,12 +15,11 @@ class Blockchain:
         self.target = 2 ** (256 - self.difficulty)
         self.block = Block("Genesis")
         self.dummy = self.head = self.block
-        self.mined_blocks = []  # Store mined blocks for consensus voting
+        self.mined_block = None  # Store mined blocks for consensus voting
 
-    # Adding blocks to the blockchain once they are mined
     def add(self, block):
         """
-        Add a new block to the blockchain.
+        Add a new mined block to the blockchain.
 
         :param block: The block to be added.
         """
@@ -34,7 +33,7 @@ class Blockchain:
 
     def mine(self, block, miner_id):
         """
-        Mine a new block and add it to the blockchain.
+        Mine a new block and add it to mined blocks.
 
         :param block: The block to be mined.
         :param miner_id: The ID of the node that mined the block.
@@ -52,11 +51,15 @@ class Blockchain:
             except Exception as e:
                 raise ValueError("Error executing smart contract.") from e
 
+        start_time = time.time()
         for n in range(self.maxNonce):
             block.nonce = n
             if int(block.calculate_hash(), 16) <= self.target:
-                self.mined_blocks.append(block)
-                print(block)
+                end_time = time.time()
+                elapsed_time = end_time - start_time
+                block.time_to_mine = elapsed_time
+                if not self.mined_block:
+                    self.mined_block = block
                 break
         else:
             raise ValueError("Mining failed. Couldn't find a valid hash.")
@@ -78,31 +81,32 @@ class Blockchain:
                 return False
         return True
 
-    def consensus(self, nodes):
+    def is_valid_block(self, block):
+        """
+        Check if a block is valid.
+
+        :param blockchain: The block to check.
+        :return: True if the block is valid, False otherwise.
+        """
+        # Check the proof of work for each block
+        if int(block.calculate_hash(), 16) > self.target:
+            return False
+        return True
+
+    def consensus(self, nodes, block_to_check):
         """
         Achieve consensus among nodes.
 
         :param nodes: A list of nodes in the network.
+        :param node_id: The ID of the node whose block is being checked
         """
-        max_length = 0
-        max_length_blockchain = None
-
         for node in nodes:
-            potential_blockchain = node.get_mined_blocks()
-            if self.is_valid_blockchain(potential_blockchain) and len(potential_blockchain) > max_length:
-                max_length = len(potential_blockchain)
-                max_length_blockchain = potential_blockchain
+            if not node.blockchain.is_valid_block(block_to_check):
+                print("Consensus not reached. Current blockchain remains unchanged.")
+                return False
 
-        if max_length_blockchain:
-            for node in nodes:
-                node.update_blockchain(max_length_blockchain)
-
-            self.mined_blocks.clear()
-
-            print("Consensus reached. Updated blockchain:")
-            self.print_blockchain()
-        else:
-            print("Consensus not reached. Current blockchain remains unchanged.")
+        print("Consensus reached. Blockchain will be updated")
+        return True
 
     def execute_contract(self, contract_script):
         """
@@ -117,18 +121,6 @@ class Blockchain:
             return result
         except Exception as e:
             raise ValueError("Error executing smart contract.") from e
-
-    def time_taken_for_mining(self, block):
-        """
-        Calculate the time taken to mine a block.
-
-        :param block: The block to be mined.
-        :return: The time taken for mining in seconds.
-        """
-        start_time = time.time()
-        self.mine(block)
-        end_time = time.time()
-        return end_time - start_time
 
     def to_json(self):
         """
@@ -190,3 +182,4 @@ class Blockchain:
         while self.head is not None:
             print(self.head)
             self.head = self.head.next
+        self.head = self.dummy
