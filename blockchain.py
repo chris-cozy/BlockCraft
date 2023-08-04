@@ -10,12 +10,12 @@ class Blockchain:
         """
         Initialize a new Blockchain instance.
         """
-        # difficulty setting for mining. Increasing this makes the window for acceptable hashes smaller, and increases the time it takes to mine
-        self.difficulty = 20
+        self.difficulty = 20  # difficulty setting for mining. Increasing this makes the window for acceptable hashes smaller, and increases the time it takes to mine
         self.maxNonce = 2**32
         self.target = 2 ** (256 - self.difficulty)
         self.block = Block("Genesis")
         self.dummy = self.head = self.block
+        self.mined_blocks = []  # Store mined blocks for consensus voting
 
     # Adding blocks to the blockchain once they are mined
     def add(self, block):
@@ -32,14 +32,17 @@ class Blockchain:
         self.block.next = block
         self.block = self.block.next
 
-    def mine(self, block):
+    def mine(self, block, miner_id):
         """
         Mine a new block and add it to the blockchain.
 
         :param block: The block to be mined.
+        :param miner_id: The ID of the node that mined the block.
         """
         if block is None:
             raise ValueError("Invalid block. Cannot mine None block.")
+
+        block.miner = miner_id
 
         if block.contract_script:
             try:
@@ -52,11 +55,54 @@ class Blockchain:
         for n in range(self.maxNonce):
             block.nonce = n
             if int(block.calculate_hash(), 16) <= self.target:
-                self.add(block)
+                self.mined_blocks.append(block)
                 print(block)
                 break
         else:
             raise ValueError("Mining failed. Couldn't find a valid hash.")
+
+    def vote_for_blockchain(self, blockchain):
+        """
+        Vote for the longest valid blockchain.
+
+        :param blockchain: The blockchain to vote for.
+        :return: True if the vote was successful, False otherwise.
+        """
+        # Check if the blockchain is longer than the current one and valid
+        if self.is_valid_blockchain(blockchain) and len(blockchain) > len(self.mined_blocks):
+            self.mined_blocks = blockchain
+            return True
+        return False
+
+    def is_valid_blockchain(self, blockchain):
+        """
+        Check if a blockchain is valid.
+
+        :param blockchain: The blockchain to check.
+        :return: True if the blockchain is valid, False otherwise.
+        """
+        # Check the proof of work for each block
+        for i, block in enumerate(blockchain):
+            if i == 0:  # Skip the genesis block
+                continue
+            if int(block.calculate_hash(), 16) > self.target:
+                return False
+            if block.prev_hash != blockchain[i - 1].calculate_hash():
+                return False
+        return True
+
+    def consensus(self, nodes):
+        """
+        Achieve consensus among nodes.
+
+        :param nodes: A list of nodes in the network.
+        """
+        for node in nodes:
+            vote_successful = node.vote_for_blockchain(self.mined_blocks)
+            if vote_successful:
+                print(f"Node {node.node_id} voted for the new blockchain.")
+            else:
+                print(f"Node {node.node_id} kept its own blockchain.")
 
     def execute_contract(self, contract_script):
         """
