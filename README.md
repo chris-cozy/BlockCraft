@@ -1,6 +1,6 @@
 # **BlockCraft**
 
-[https://img.shields.io/badge/blockchain-simulator-brightgreen](https://img.shields.io/badge/blockchain-simulator-brightgreen)
+![https://img.shields.io/badge/blockchain-simulator-brightgreen](https://img.shields.io/badge/blockchain-simulator-brightgreen)
 
 BlockCraft is a simple blockchain simulator that emulates the behavior of a decentralized blockchain network. It provides basic functionalities for mining blocks, adding transactions, and saving/loading the blockchain data to/from files. The simulator is designed as an educational tool to understand the fundamental concepts of blockchain technology.
 
