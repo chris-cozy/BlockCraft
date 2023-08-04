@@ -1,6 +1,7 @@
 from block import Block
 from blockchain import Blockchain
 import time
+from node import Node
 
 
 def main():
@@ -8,46 +9,38 @@ def main():
     Entry point of the blockchain simulator.
     """
     try:
-        # Each node represents a computer
-        node1 = Blockchain()
-        numBlocks = 10
+        node1_blockchain = Blockchain()
+        node1 = Node(node_id=1, blockchain=node1_blockchain)
+        num_blocks_to_mine = 5
 
-        for n in range(numBlocks):
-            data = "Node 1 - Block " + str(n + 1)
-            test_contract_script = f"{n} * 4"
-            block = Block(data, test_contract_script)
+        for n in range(num_blocks_to_mine):
+            data = f"Node {node1.node_id} - Block {n + 1}"
+            block = Block(data)
             node1.mine(block)
-
-        # Save the blockchain to a file
-        node1.save_to_file("node1_blockchain.json")
-        print("Node 1 blockchain saved to file.")
 
         # Simulate a network latency for demonstration purposes
         time.sleep(2)
 
-        # Create second node and load blockchain from file
-        try:
-            node2 = Blockchain.load_from_file("node1_blockchain.json")
-            print("Node 2 blockchain loaded from file.")
-        except FileNotFoundError:
-            print("Node 2 blockchain file not found. Creating new blockchain...")
-            node2 = Blockchain()
+        node2_blockchain = Blockchain()
+        node2 = Node(node_id=2, blockchain=node2_blockchain)
 
-        numBlocks = 5
-
-        for n in range(numBlocks):
-            data = "Node 2 - Block " + str(n + 1)
+        for n in range(num_blocks_to_mine):
+            data = f"Node {node1.node_id} - Block {n + 1}"
             block = Block(data)
-            node2.mine(block)
+            node1.mine(block)
 
-        # Print blockchain contents for both nodes
+        # Achieve consensus
+        nodes = [node1, node2]
+        node1.blockchain.consensus(nodes)
+
+        # Print final blockchain for each node
         print("\nNode 1 blockchain:")
-        node1.print_blockchain()
+        node1.blockchain.print_blockchain()
         print("\nNode 2 blockchain:")
-        node2.print_blockchain()
+        node2.blockchain.print_blockchain()
 
-    except Exception as e:
-        print("Error occurred:", str(e))
+    except ValueError as e:
+        print(f"Error {e}")
 
 
 if __name__ == "__main__":
