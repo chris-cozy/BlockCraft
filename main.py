@@ -25,7 +25,7 @@ def main():
         node2 = Node(node_id=2, blockchain=node2_blockchain)
 
         for n in range(num_blocks_to_mine):
-            data = f"Node {node1.node_id} - Block {n + 1}"
+            data = f"Node {node2.node_id} - Block {n + 1}"
             block = Block(data)
             node1.mine(block)
 
